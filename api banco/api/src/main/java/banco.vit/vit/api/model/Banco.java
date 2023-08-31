@@ -10,6 +10,8 @@ import lombok.Setter;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @Entity(name = "banco")
 @Table(name = "banco")
 @AllArgsConstructor
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Getter
 public class Banco {
     @Id
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nome;
@@ -27,11 +30,15 @@ public class Banco {
     @JoinColumn(name = "id_endereco")
     private Endereco endereco;
 
+    @OneToMany(mappedBy = "banco")
+    private List<Agencia> agencias;
+
     public Banco (DadosCadastroBancoDto dados){
         this.nome = dados.nome();
         this.endereco = new Endereco(dados.endereco());
         this.ativo = true;
     }
+
 
     public void excluir(){
         this.ativo = false;

@@ -15,7 +15,6 @@ public record DadosCadastrosUsuariosDto(
         @Email
         String email,
         @NotBlank
-                @UniqueElements
         String usuario,
         @NotBlank
         @Pattern(regexp = "\\d{8}")

@@ -30,6 +30,8 @@ public class Usuario {
     @JoinColumn(name = "id_endereco")
     private Endereco endereco;
 
+    private boolean ativo;
+
     public Usuario (DadosCadastrosUsuariosDto dados){
         this.nome = dados.nome();
 
@@ -40,5 +42,12 @@ public class Usuario {
         this.senha = dados.senha();
 
         this.endereco = new Endereco(dados.endereco());
+
+        this.ativo = true;
     }
+
+    public void excluir (){
+        this.ativo = false;
+    }
+
 }
