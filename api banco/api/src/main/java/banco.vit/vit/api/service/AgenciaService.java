@@ -1,6 +1,8 @@
 package banco.vit.vit.api.service;
 
+import banco.vit.vit.api.dto.DadosAtualizacaoAgenciaDto;
 import banco.vit.vit.api.dto.DadosCadastroAgenciaDto;
+import banco.vit.vit.api.dto.DadosListagemAgenciaDto;
 import banco.vit.vit.api.dto.DadosListagemUsuarioDto;
 import banco.vit.vit.api.model.Agencia;
 import banco.vit.vit.api.model.Banco;
@@ -19,6 +21,29 @@ public class AgenciaService {
     private BancoRepository bancoRepository;
 
     public void cadastrarAgencia (DadosCadastroAgenciaDto dados){
-        agenciaRepository.save(new Agencia(dados));
+
+        Banco banco = bancoRepository.getReferenceById(dados.id_banco());
+        Agencia ag = new Agencia();
+        ag.setNomeAgencia(dados.nomeAgencia());
+        ag.setBanco(banco);
+        if(banco.isAtivo()== true){
+            agenciaRepository.save(ag);
+        }
+    }
+
+    public Page<DadosListagemAgenciaDto> listarAgencia(Pageable pagina){
+        return agenciaRepository.findAllByAtivoTrue(pagina).map(DadosListagemAgenciaDto::new);
+    }
+
+    public void atualizarAgencia (DadosAtualizacaoAgenciaDto dados){
+        Agencia agencia = agenciaRepository.findById(dados.id()).get();
+
+        if(agencia.getNomeAgencia() != null){
+            agencia.setNomeAgencia(dados.nomeAgencia());
+        }
+    }
+    public void excluirAgencia(Long id){
+        Agencia agencia = agenciaRepository.getReferenceById(id);
+        agencia.excluirAgencia();
     }
 }

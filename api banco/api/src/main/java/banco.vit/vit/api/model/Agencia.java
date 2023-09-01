@@ -17,19 +17,23 @@ import java.util.List;
 @Getter
 public class Agencia {
     @Id
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-//    private Long id_banco;
-
     private String nomeAgencia;
 
     @ManyToOne
     @JoinColumn(name = "id_banco", nullable = false )
     private Banco banco;
 
+    private boolean ativo;
+
     public Agencia (DadosCadastroAgenciaDto dados){
-//        this.id_banco = dados.id_banco();
         this.nomeAgencia = dados.nomeAgencia();
+        this.ativo = true;
+    }
+
+    public void excluirAgencia(){
+        this.ativo = false;
     }
 }
