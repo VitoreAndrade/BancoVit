@@ -18,7 +18,6 @@ public class Conta {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_agencia")
     private Agencia agencia;
@@ -32,13 +31,20 @@ public class Conta {
     private Banco banco;
 
     private double saldo;
-
+    @Enumerated(EnumType.STRING)
     private TipoDeConta tipoConta;
 
+    private boolean ativo;
+    private boolean cartaoDeCredito;
 
     public Conta(DadosCadastroContaDto dados) {
         this.tipoConta = dados.tipoDeConta();
         this.saldo = dados.saldo();
+        this.cartaoDeCredito = true;
+        this.ativo = true;
+    }
 
+    public void excluir() {
+        this.ativo = false;
     }
 }

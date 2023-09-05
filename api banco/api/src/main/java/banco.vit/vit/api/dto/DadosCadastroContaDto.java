@@ -11,8 +11,10 @@ public record DadosCadastroContaDto(
         Long idBanco,
         Long idAgencia,
         Long IdUsuario,
+        boolean ativo,
         TipoDeConta tipoDeConta,
         double saldo
+
 
 ) {
 }
