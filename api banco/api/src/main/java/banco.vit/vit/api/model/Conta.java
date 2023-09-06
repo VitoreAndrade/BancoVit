@@ -36,12 +36,15 @@ public class Conta {
 
     private boolean ativo;
     private boolean cartaoDeCredito;
-
+    private double limiteCredito;
+    private boolean lis;
+    private double limiteLis;
     public Conta(DadosCadastroContaDto dados) {
         this.tipoConta = dados.tipoDeConta();
         this.saldo = dados.saldo();
         this.cartaoDeCredito = true;
         this.ativo = true;
+        this.limiteCredito = dados.limiteCredito();
     }
 
     public void excluir() {
