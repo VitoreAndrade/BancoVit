@@ -45,9 +45,32 @@ public class Conta {
         this.cartaoDeCredito = true;
         this.ativo = true;
         this.limiteCredito = dados.limiteCredito();
+        this.limiteLis = dados.limiteLis();
     }
 
     public void excluir() {
         this.ativo = false;
+    }
+
+    public void tranferir (Long valor){
+        this.saldo -=valor;
+    }
+    public void transferirSaldoCredito(Long valor){
+        this.limiteCredito -= valor;
+    }
+    public void transferirSaldoLis (Long valor){
+        this.limiteLis -= valor;
+    }
+    public void zerarSaldo(Long valor){
+        this.saldo = 0L;
+    }
+    public void zerarSaldoLis(Long valor){
+        this.limiteLis = 0L;
+    }
+    public void zerarCredtio(Long valor){
+        this.limiteCredito = 0L;
+    }
+    public void depositoSaldo(Long valor){
+        this.saldo += valor;
     }
 }

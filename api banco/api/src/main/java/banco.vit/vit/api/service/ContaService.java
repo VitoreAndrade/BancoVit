@@ -38,74 +38,58 @@ public class ContaService {
         conta.setUsario(usuario);
 
         if (conta.getTipoConta() == TipoDeConta.ContaNormal) {
-
             conta.setCartaoDeCredito(false);
             conta.setLis(false);
-            if (!conta.isCartaoDeCredito() && !conta.isLis()) {
-                conta.setLimiteCredito(0);
-                conta.setLimiteLis(0);
-                contaRepository.save(conta);
+
+            if(dados.limiteCredito() >0 && dados.limiteLis() >0) {
+                throw new DadosErro("Sua conta é do tipo normal, então não pode haver limite de credito e nem limite lis");
             }
-            if (conta.getLimiteCredito() > 0) {
-                throw new RuntimeException("Sua conta é do tipo normal, então não pode haver limite de credito");
+            if(dados.limiteCredito() >0){
+                throw new DadosErro("Sua conta é do tipo normal, então não pode haver limite de credito");
+            }
+            if(dados.limiteLis() >0){
+                throw new DadosErro("Sua conta é do tipo normal, então não pode haver limite de lis");
             }
 
-
-        } else if (conta.getTipoConta() == TipoDeConta.ContaEspecial) {
-            conta.setCartaoDeCredito(true);
-            conta.setLis(false);
-            if (conta.getLimiteCredito() == 0)
-                throw new DadosErro("Sua conta possui cartão de crédito, informe o valor para: limite crédito");
 
             contaRepository.save(conta);
+        }
+        if (conta.getTipoConta() == TipoDeConta.ContaEspecial) {
+            conta.setCartaoDeCredito(true);
+            conta.setLis(false);
 
-        } else if (conta.getTipoConta() == TipoDeConta.ContaPremium) {
+
+            if (dados.limiteCredito() == 0 ){
+                throw new DadosErro("Sua conta possui cartão de crédito, informe o valor para: limite crédito");
+            }
+
+            if(dados.limiteLis() >=1){
+                throw new DadosErro("Sua conta possui cartão de crédito, mas não possui limite lis");
+            }
+
+            contaRepository.save(conta);    
+
+        }
+        if (conta.getTipoConta() == TipoDeConta.ContaPremium) {
             conta.setCartaoDeCredito(true);
             conta.setLis(true);
 
-            if (!(conta.getLimiteCredito() == 0 && !(conta.getLimiteLis() == 0)))
-                throw new DadosErro("Sua conta possui cartão de crédito e lis, informe o valor para: limite crédito. Limite Lis");
+           if(dados.limiteCredito() <1 && dados.limiteLis() <1) {
+               throw new DadosErro("Sua conta possui cartão de crédito e lis, informe o valor para: limite crédito. Limite Lis");
+           }
 
+            if(dados.limiteCredito() <1){
+                throw new DadosErro("Sua conta possui cartão de crédito e lis, informe o valor para: limite crédito");
+            }
+            if( dados.limiteLis() <1) {
+                throw new DadosErro("Sua conta possui cartão de crédito e lis, informe o valor para: limite lis");
+            }
             contaRepository.save(conta);
         }
 
 
-
-
-
-
-
-
         return "Conta cadastrada com sucesso";
     }
-
-
-//            if(conta.getTipoConta() == TipoDeConta.ContaNormal){
-//                System.out.println("entrou aquiiiii");
-//                conta.setCartaoDeCredito(true);
-//                contaRepository.save(conta);
-//
-//            }
-//            else {
-//                System.out.println("entrou naoooooo");
-//                throw new DadosErro("você esta passando um tipo de conta especial, verfique se adicinou o valor do lis e do cartão de credito");
-//            }
-//        RespostaRequisicao dc = new RespostaRequisicao("Conta cadastrada", HttpStatus.OK.toString());
-//        return ResponseEntity.ok(dc);
-
-//        }
-//        catch (DadosErro erro){
-//            RespostaRequisicao rc = new RespostaRequisicao("Tipo de conta premium, informe o valor do saldo de credito" + erro.getMessage(), HttpStatus.BAD_REQUEST.toString());
-//
-//            return new ResponseEntity<>(rc, HttpStatus.BAD_REQUEST);
-//        }
-//        catch(Exception ex) {
-//            System.out.println("Erro ao salvar o agendamento" + ex.getMessage());
-//        }
-
-    //   RespostaRequisicao dc = new RespostaRequisicao("Conta cadastrada", HttpStatus.OK.toString());
-
-//     return new ResponseEntity<>(dc, HttpStatus.OK);
 
 
     public Page<DadosListagemContaDto> listarConta(Pageable pagina) {
