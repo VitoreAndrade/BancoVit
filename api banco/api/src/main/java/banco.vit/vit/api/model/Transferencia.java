@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @Setter
 @Getter
 public class Transferencia {
-    @Id
+      @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -30,12 +30,19 @@ public class Transferencia {
     private Conta contaRecebe;
 
     private Long valor;
+
     private LocalDateTime dataTransacao;
+
+    @Enumerated(EnumType.STRING)
     private StatusTransferencia status;
+
+    @Enumerated(EnumType.STRING)
+    private TipoTransferencia tipoTransferencia;
 
 public Transferencia (DadosTransferenciaDto dados){
     this.valor = dados.valor();
     this.status = dados.status();
+
 }
 
 

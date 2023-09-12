@@ -15,6 +15,7 @@ import lombok.Setter;
 @Getter
 public class Conta {
     @Id
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -51,17 +52,27 @@ public class Conta {
     public void excluir() {
         this.ativo = false;
     }
+    public void adicionar(Long valor){
+        this.saldo +=valor;
+    }
 
-    public void tranferir (Long valor){
+    public void transferir (Long valor){
         this.saldo -=valor;
     }
+
     public void transferirSaldoCredito(Long valor){
         this.limiteCredito -= valor;
+    }
+    public void receberSaldoCredito(Long valor){
+        this.limiteCredito += valor;
     }
     public void transferirSaldoLis (Long valor){
         this.limiteLis -= valor;
     }
-    public void zerarSaldo(Long valor){
+    public void receberSaldoLis (Long valor){
+        this.limiteLis += valor;
+    }
+    public void zerarSaldo(){
         this.saldo = 0L;
     }
     public void zerarSaldoLis(Long valor){
