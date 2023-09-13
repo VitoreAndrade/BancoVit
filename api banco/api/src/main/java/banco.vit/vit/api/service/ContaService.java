@@ -40,6 +40,8 @@ public class ContaService {
         if (conta.getTipoConta() == TipoDeConta.ContaNormal) {
             conta.setCartaoDeCredito(false);
             conta.setLis(false);
+            conta.setLimiteCredito(0);
+            conta.setLimiteLis(0);
 
             if(dados.limiteCredito() >0 && dados.limiteLis() >0) {
                 throw new DadosErro("Sua conta é do tipo normal, então não pode haver limite de credito e nem limite lis");

@@ -4,5 +4,5 @@ public enum StatusTransferencia {
     PENDENTE,
     CONCLUIDO,
     INDEFERIDO,
-    CANCELADO
+    SEMLIMITE
 }
