@@ -63,25 +63,17 @@ public class Conta {
     public void transferirSaldoCredito(double valor){
         this.limiteCredito -= valor;
     }
-    public void receberSaldoCredito(Long valor){
-        this.limiteCredito += valor;
-    }
+
     public void transferirSaldoLis (double valor){
         this.limiteLis -= valor;
     }
-    public void receberSaldoLis (Long valor){
-        this.limiteLis += valor;
-    }
+
     public void zerarSaldo(){
         this.saldo = 0L;
     }
-    public void zerarSaldoLis(Long valor){
-        this.limiteLis = 0L;
-    }
-    public void zerarCredtio(Long valor){
+
+    public void zerarCredtio(){
         this.limiteCredito = 0L;
     }
-    public void depositoSaldo(Long valor){
-        this.saldo += valor;
-    }
+
 }

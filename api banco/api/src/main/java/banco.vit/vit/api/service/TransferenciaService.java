@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
-import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 @Service
 public class TransferenciaService {
     @Autowired
@@ -33,24 +32,24 @@ public class TransferenciaService {
             contaRecebe.adicionar(valor);
             transfer.setStatus(StatusTransferencia.CONCLUIDO);
             transfer.setTipoTransferencia(TipoTransferencia.SALDO);
-            if (conta.getId() == contaRecebe.getId()) {
-                transferenciaRepository.save(transfer);
-                throw new DadosErro("Você não pode transferir para a mesma conta");
-            }
             transferenciaRepository.save(transfer);
 
+        } else if (conta.getTipoConta() == TipoDeConta.ContaNormal) {
+            if (conta.getSaldo() < valor) {
+                transfer.setStatus(StatusTransferencia.CONCLUIDO);
+                transfer.setTipoTransferencia(TipoTransferencia.SALDO);
+
+                throw new DadosErro("Saldo insuficiente");
+            }
+            transferenciaRepository.save(transfer);
+        }
+        if (conta.getId() == contaRecebe.getId()) {
+            transferenciaRepository.save(transfer);
+            throw new DadosErro("Você não pode transferir para a mesma conta");
         }
 
-
-        if (conta.getTipoConta() == TipoDeConta.ContaEspecial || conta.getTipoConta() == TipoDeConta.ContaPremium && conta.getSaldo() < valor) {
-
-
-            if (valor > (conta.getLimiteCredito() + conta.getSaldo())) {
-                transfer.setTipoTransferencia(TipoTransferencia.SALDOECREDITO);
-                transfer.setStatus(StatusTransferencia.SEMLIMITE);
-                transferenciaRepository.save(transfer);
-                throw new DadosErro("saldo insuficiente");
-            } else if (valor <= (conta.getLimiteCredito() + conta.getSaldo())) {
+        if (conta.getTipoConta() == TipoDeConta.ContaEspecial) {
+            if (valor > conta.getSaldo()) {
                 conta.transferirSaldoCredito(valor - conta.getSaldo());
                 conta.zerarSaldo();
                 contaRecebe.adicionar(valor);
@@ -58,43 +57,40 @@ public class TransferenciaService {
                 transfer.setStatus(StatusTransferencia.CONCLUIDO);
                 transferenciaRepository.save(transfer);
             }
+
+            else if (valor > (conta.getLimiteCredito() + conta.getSaldo())) {
+                transfer.setTipoTransferencia(TipoTransferencia.SALDOECREDITO);
+                transfer.setStatus(StatusTransferencia.SEMLIMITE);
+                transferenciaRepository.save(transfer);
+                throw new DadosErro("saldo insuficiente");
+            }
         }
-        if (conta.getTipoConta() == TipoDeConta.ContaPremium && conta.getLimiteCredito() >= valor) {
+
+        if (conta.getTipoConta() == TipoDeConta.ContaPremium) {
             if (valor > (conta.getLimiteCredito() + conta.getSaldo() + conta.getLimiteLis())) {
                 transfer.setTipoTransferencia(TipoTransferencia.SALDOECREDITOELIS);
                 transfer.setStatus(StatusTransferencia.SEMLIMITE);
                 transferenciaRepository.save(transfer);
                 throw new DadosErro("saldo insuficiente");
             }
-            else if (valor <= (conta.getLimiteCredito() + conta.getSaldo() + conta.getLimiteLis())) {
-                conta.transferirSaldoCredito(valor - conta.getLimiteCredito());
-                conta.transferirSaldoLis(valor - (conta.getLimiteCredito() + conta.getSaldo()));
+            if (valor > (conta.getSaldo() + conta.getLimiteCredito())) {
+                conta.transferirSaldoLis(valor - (conta.getSaldo() + conta.getLimiteCredito()));
+                conta.zerarSaldo();
+                conta.zerarCredtio();
                 contaRecebe.adicionar(valor);
                 transfer.setTipoTransferencia(TipoTransferencia.SALDOECREDITOELIS);
                 transfer.setStatus(StatusTransferencia.CONCLUIDO);
             }
+                else if (valor > conta.getSaldo()) {
+                  conta.transferirSaldoCredito(valor - conta.getSaldo());
+                  conta.zerarSaldo();
+                  contaRecebe.adicionar(valor);
+                  transfer.setTipoTransferencia(TipoTransferencia.SALDOECREDITO);
+                  transfer.setStatus(StatusTransferencia.CONCLUIDO);
+            }
         }
-
-
-//                transferenciaRepository.save(transfer);
-//            } else {
-//                transfer.setStatus(StatusTransferencia.INDEFERIDO);
-//                transferenciaRepository.save(transfer);
-//                throw new DadosErro("Limite de crédito insuficiente");
-//            }
-//                    if{
-//            transfer.setStatus(StatusTransferencia.INDEFERIDO);
-//            transfer.setTipoTransferencia(TipoTransferencia.CANCELADO);
-//            transferenciaRepository.save(transfer);
-//            throw new DadosErro("saldo insuficiente");
-//
-//
-//        }
-
-
-            return "Transferencia realizada";
-        }
-
+        return "Transferencia realizada";
+    }
 }
 
 
