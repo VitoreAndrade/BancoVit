@@ -36,7 +36,7 @@ public class TransferenciaService {
 
         } else if (conta.getTipoConta() == TipoDeConta.ContaNormal) {
             if (conta.getSaldo() < valor) {
-                transfer.setStatus(StatusTransferencia.CONCLUIDO);
+                transfer.setStatus(StatusTransferencia.SEMLIMITE);
                 transfer.setTipoTransferencia(TipoTransferencia.SALDO);
 
                 throw new DadosErro("Saldo insuficiente");
