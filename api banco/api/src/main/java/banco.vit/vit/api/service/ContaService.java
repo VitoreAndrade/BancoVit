@@ -43,13 +43,13 @@ public class ContaService {
             conta.setLimiteCredito(0);
             conta.setLimiteLis(0);
 
-            if(dados.limiteCredito() >0 && dados.limiteLis() >0) {
+            if (dados.limiteCredito() > 0 && dados.limiteLis() > 0) {
                 throw new DadosErro("Sua conta é do tipo normal, então não pode haver limite de credito e nem limite lis");
             }
-            if(dados.limiteCredito() >0){
+            if (dados.limiteCredito() > 0) {
                 throw new DadosErro("Sua conta é do tipo normal, então não pode haver limite de credito");
             }
-            if(dados.limiteLis() >0){
+            if (dados.limiteLis() > 0) {
                 throw new DadosErro("Sua conta é do tipo normal, então não pode haver limite de lis");
             }
 
@@ -61,29 +61,29 @@ public class ContaService {
             conta.setLis(false);
 
 
-            if (dados.limiteCredito() == 0 ){
+            if (dados.limiteCredito() == 0) {
                 throw new DadosErro("Sua conta possui cartão de crédito, informe o valor para: limite crédito");
             }
 
-            if(dados.limiteLis() >=1){
+            if (dados.limiteLis() >= 1) {
                 throw new DadosErro("Sua conta possui cartão de crédito, mas não possui limite lis");
             }
 
-            contaRepository.save(conta);    
+            contaRepository.save(conta);
 
         }
         if (conta.getTipoConta() == TipoDeConta.ContaPremium) {
             conta.setCartaoDeCredito(true);
             conta.setLis(true);
 
-           if(dados.limiteCredito() <1 && dados.limiteLis() <1) {
-               throw new DadosErro("Sua conta possui cartão de crédito e lis, informe o valor para: limite crédito. Limite Lis");
-           }
+            if (dados.limiteCredito() < 1 && dados.limiteLis() < 1) {
+                throw new DadosErro("Sua conta possui cartão de crédito e lis, informe o valor para: limite crédito. Limite Lis");
+            }
 
-            if(dados.limiteCredito() <1){
+            if (dados.limiteCredito() < 1) {
                 throw new DadosErro("Sua conta possui cartão de crédito e lis, informe o valor para: limite crédito");
             }
-            if( dados.limiteLis() <1) {
+            if (dados.limiteLis() < 1) {
                 throw new DadosErro("Sua conta possui cartão de crédito e lis, informe o valor para: limite lis");
             }
             contaRepository.save(conta);
@@ -93,10 +93,10 @@ public class ContaService {
         return "Conta cadastrada com sucesso";
     }
 
-
     public Page<DadosListagemContaDto> listarConta(Pageable pagina) {
         return contaRepository.findAllByAtivoTrue(pagina).map(DadosListagemContaDto::new);
     }
+
 
     public void atualizarConta(DadosAtualizacaoContaDto dadosAtualizar) {
         Conta conta = contaRepository.findById(dadosAtualizar.id()).get();

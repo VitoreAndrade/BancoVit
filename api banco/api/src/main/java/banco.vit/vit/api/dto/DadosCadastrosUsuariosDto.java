@@ -1,6 +1,7 @@
 package banco.vit.vit.api.dto;
 
 import banco.vit.vit.api.model.Endereco;
+import banco.vit.vit.api.model.Pais;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -21,6 +22,8 @@ public record DadosCadastrosUsuariosDto(
         String senha,
         @NotNull
         DadosEnderecoDto endereco
+//        @NotNull
+//        Pais pais
 
 
 ) {

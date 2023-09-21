@@ -1,14 +1,11 @@
 package banco.vit.vit.api.model;
 
-import banco.vit.vit.api.dto.DadosAtualizacaoBancoDto;
 import banco.vit.vit.api.dto.DadosCadastroBancoDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -32,6 +29,9 @@ public class Banco {
 
     @OneToMany(mappedBy = "banco")
     private List<Agencia> agencias;
+
+//    @Enumerated(EnumType.STRING)
+//    private Pais pais;
 
     public Banco (DadosCadastroBancoDto dados){
         this.nome = dados.nome();

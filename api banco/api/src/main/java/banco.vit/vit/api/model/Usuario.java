@@ -33,6 +33,9 @@ public class Usuario {
 
     private boolean ativo;
 
+//    @Enumerated(EnumType.STRING)
+//    private Pais pais;
+
     public Usuario (DadosCadastrosUsuariosDto dados){
         this.nome = dados.nome();
 
@@ -45,6 +48,7 @@ public class Usuario {
         this.endereco = new Endereco(dados.endereco());
 
         this.ativo = true;
+//        this.pais =  dados.pais();
     }
 
     public void excluir (){

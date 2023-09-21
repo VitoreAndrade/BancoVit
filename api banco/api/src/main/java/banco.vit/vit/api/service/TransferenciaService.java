@@ -17,25 +17,33 @@ public class TransferenciaService {
     @Autowired
     private ContaRepository contaRepository;
 
+
     public String cadastrarTransferencia(DadosTransferenciaDto dados) {
         Conta conta = contaRepository.getReferenceById(dados.idContaEnvia());
         Conta contaRecebe = contaRepository.getReferenceById(dados.idContaRecebe());
-        Long valor = dados.valor();
+        Long valor = (long) (dados.valor()/conta.getMoeda().getMultiplicador());
         Transferencia transfer = new Transferencia();
         transfer.setValor(dados.valor());
         transfer.setContaEnvia(conta);
         transfer.setContaRecebe(contaRecebe);
         transfer.setDataTransacao(LocalDateTime.now());
 
-        if (conta.getSaldo() >= valor) {
-            conta.transferir(valor);
-            contaRecebe.adicionar(valor);
+
+        if (conta.getSaldo() >= dados.valor()) {
+
+
+//            if(!conta.equals(contaRecebe)){
+            conta.transferir( valor);
+            contaRecebe.adicionar( valor);
             transfer.setStatus(StatusTransferencia.CONCLUIDO);
             transfer.setTipoTransferencia(TipoTransferencia.SALDO);
             transferenciaRepository.save(transfer);
 
-        } else if (conta.getTipoConta() == TipoDeConta.ContaNormal) {
-            if (conta.getSaldo() < valor) {
+
+        }
+
+        else if (conta.getTipoConta() == TipoDeConta.ContaNormal) {
+            if (conta.getSaldo() < dados.valor()) {
                 transfer.setStatus(StatusTransferencia.SEMLIMITE);
                 transfer.setTipoTransferencia(TipoTransferencia.SALDO);
 
@@ -48,6 +56,7 @@ public class TransferenciaService {
             throw new DadosErro("Você não pode transferir para a mesma conta");
         }
 
+
         if (conta.getTipoConta() == TipoDeConta.ContaEspecial) {
             if (valor > conta.getSaldo()) {
                 conta.transferirSaldoCredito(valor - conta.getSaldo());
@@ -56,9 +65,7 @@ public class TransferenciaService {
                 transfer.setTipoTransferencia(TipoTransferencia.SALDOECREDITO);
                 transfer.setStatus(StatusTransferencia.CONCLUIDO);
                 transferenciaRepository.save(transfer);
-            }
-
-            else if (valor > (conta.getLimiteCredito() + conta.getSaldo())) {
+            } else if (valor > (conta.getLimiteCredito() + conta.getSaldo())) {
                 transfer.setTipoTransferencia(TipoTransferencia.SALDOECREDITO);
                 transfer.setStatus(StatusTransferencia.SEMLIMITE);
                 transferenciaRepository.save(transfer);
@@ -80,17 +87,18 @@ public class TransferenciaService {
                 contaRecebe.adicionar(valor);
                 transfer.setTipoTransferencia(TipoTransferencia.SALDOECREDITOELIS);
                 transfer.setStatus(StatusTransferencia.CONCLUIDO);
-            }
-                else if (valor > conta.getSaldo()) {
-                  conta.transferirSaldoCredito(valor - conta.getSaldo());
-                  conta.zerarSaldo();
-                  contaRecebe.adicionar(valor);
-                  transfer.setTipoTransferencia(TipoTransferencia.SALDOECREDITO);
-                  transfer.setStatus(StatusTransferencia.CONCLUIDO);
+            } else if (valor > conta.getSaldo()) {
+                conta.transferirSaldoCredito(valor - conta.getSaldo());
+                conta.zerarSaldo();
+                contaRecebe.adicionar(valor);
+                transfer.setTipoTransferencia(TipoTransferencia.SALDOECREDITO);
+                transfer.setStatus(StatusTransferencia.CONCLUIDO);
             }
         }
         return "Transferencia realizada";
     }
+
+
 }
 
 

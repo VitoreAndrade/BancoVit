@@ -40,6 +40,11 @@ public class Conta {
     private double limiteCredito;
     private boolean lis;
     private double limiteLis;
+
+    @Enumerated(EnumType.STRING)
+    private Moeda moeda;
+
+
     public Conta(DadosCadastroContaDto dados) {
         this.tipoConta = dados.tipoDeConta();
         this.saldo = dados.saldo();
@@ -47,6 +52,7 @@ public class Conta {
         this.ativo = true;
         this.limiteCredito = dados.limiteCredito();
         this.limiteLis = dados.limiteLis();
+        this.moeda = dados.moeda();
     }
 
     public void excluir() {
@@ -76,4 +82,9 @@ public class Conta {
         this.limiteCredito = 0L;
     }
 
+    // TODO Zerar LIS
+
+    public void transferenciaInternacional (Long valor){
+        this.saldo -= valor;
+    }
 }

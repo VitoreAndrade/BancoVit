@@ -39,11 +39,14 @@ public class Transferencia {
     @Enumerated(EnumType.STRING)
     private TipoTransferencia tipoTransferencia;
 
+
+
 public Transferencia (DadosTransferenciaDto dados){
     this.valor = dados.valor();
     this.status = dados.status();
 
 }
+
 
 
 

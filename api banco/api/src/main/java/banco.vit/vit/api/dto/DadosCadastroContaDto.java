@@ -1,6 +1,7 @@
 package banco.vit.vit.api.dto;
 
 import banco.vit.vit.api.model.Agencia;
+import banco.vit.vit.api.model.Moeda;
 import banco.vit.vit.api.model.TipoDeConta;
 import banco.vit.vit.api.model.Usuario;
 import jakarta.persistence.CascadeType;
@@ -23,7 +24,8 @@ public record DadosCadastroContaDto(
         @NotNull
         double saldo,
         double limiteCredito,
-        double limiteLis
+        double limiteLis,
+        Moeda moeda
 
 
 ) {
